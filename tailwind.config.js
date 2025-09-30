@@ -1,5 +1,6 @@
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx}"] ,
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
@@ -7,12 +8,12 @@ export default {
         accent: "#00B894",
         warn: "#FF7675",
         ink: {
-          DEFAULT: "#1F2937",
-          secondary: "#4B5563"
+          DEFAULT: "rgb(var(--color-ink) / <alpha-value>)",
+          secondary: "rgb(var(--color-ink-secondary) / <alpha-value>)"
         },
         bg: {
-          DEFAULT: "#F9FAFB",
-          card: "#FFFFFF"
+          DEFAULT: "rgb(var(--color-bg) / <alpha-value>)",
+          card: "rgb(var(--color-bg-card) / <alpha-value>)"
         }
       },
       fontFamily: {

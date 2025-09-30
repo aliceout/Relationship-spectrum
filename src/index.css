@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg: 249 250 251;
+  --color-bg-card: 255 255 255;
+  --color-ink: 31 41 55;
+  --color-ink-secondary: 75 85 99;
+  color-scheme: light;
+}
+
+.dark {
+  --color-bg: 17 24 39;
+  --color-bg-card: 30 41 59;
+  --color-ink: 226 232 240;
+  --color-ink-secondary: 148 163 184;
+  color-scheme: dark;
+}
+
 body {
   @apply bg-bg font-sans text-ink;
 }

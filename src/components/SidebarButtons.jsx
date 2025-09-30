@@ -21,7 +21,7 @@ const SidebarButtons = ({
             className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
               isActive
                 ? "border-brand bg-brand text-white shadow-sm"
-                : "border-ink/10 bg-white text-ink hover:border-brand/40 hover:bg-brand/10"
+                : "border-ink/10 bg-bg-card text-ink hover:border-brand/40 hover:bg-brand/10"
             } ${isAnimating ? "opacity-70" : ""}`}
           >
             {label}

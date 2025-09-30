@@ -27,7 +27,22 @@ const clampToScale = (value, scale) => {
   return Math.min(scale.max, Math.max(scale.min, numeric))
 }
 
+const THEME_STORAGE_KEY = "theme-preference"
+
+const getStoredThemePreference = () => {
+  if (typeof window === "undefined") return "system"
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+  return stored === "light" || stored === "dark" || stored === "system" ? stored : "system"
+}
+
+const getSystemThemePreference = () => {
+  if (typeof window === "undefined") return "light"
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+}
+
 function App() {
+  const [theme, setTheme] = useState(getStoredThemePreference)
+  const [systemTheme, setSystemTheme] = useState(getSystemThemePreference)
   const [lang, setLang] = useState("fr")
   const [presets, setPresets] = useState([])
   const [scale, setScale] = useState(defaultScale)
@@ -44,6 +59,43 @@ function App() {
   const valuesRef = useRef(values)
 
   const t = dictionary[lang] ?? dictionary.fr
+  const appliedTheme = theme === "system" ? systemTheme : theme
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const media = window.matchMedia("(prefers-color-scheme: dark)")
+    const handleChange = (event) => {
+      setSystemTheme(event.matches ? "dark" : "light")
+    }
+
+    handleChange(media)
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", handleChange)
+      return () => media.removeEventListener("change", handleChange)
+    }
+
+    media.addListener(handleChange)
+    return () => media.removeListener(handleChange)
+  }, [])
+
+  useEffect(() => {
+    if (typeof document === "undefined") return
+
+    const root = document.documentElement
+    if (appliedTheme === "dark") {
+      root.classList.add("dark")
+    } else {
+      root.classList.remove("dark")
+    }
+  }, [appliedTheme])
+
 
   const hydrateFromUrl = useCallback((presetList, scaleData) => {
     try {
@@ -306,6 +358,9 @@ function App() {
               onToggleLang={toggleLanguage}
               onToggleMenu={setIsMenuOpen}
               isMenuOpen={isMenuOpen}
+              theme={theme}
+              resolvedTheme={appliedTheme}
+              onThemeChange={setTheme}
             />
           </section>
 
@@ -366,4 +421,5 @@ function App() {
 }
 
 export default App
+
 
