@@ -1,12 +1,22 @@
-export const dimensionKeys = [
-  "romantisme",
-  "sexualite",
-  "amitie",
-  "intimite_emotionnelle",
-  "intimite_physique",
-  "exclusivite_physique_sexuelle",
-  "exclusivite_emotionnelle"
+﻿export const dimensionGroups = [
+  {
+    id: "linkType",
+    labelKey: "linkType",
+    dimensions: ["romantisme", "sexualite", "amitie"]
+  },
+  {
+    id: "intimacyType",
+    labelKey: "intimacyType",
+    dimensions: ["intimite_emotionnelle", "intimite_physique"]
+  },
+  {
+    id: "exclusivityType",
+    labelKey: "exclusivityType",
+    dimensions: ["exclusivite_physique_sexuelle", "exclusivite_emotionnelle"]
+  }
 ]
+
+export const dimensionKeys = dimensionGroups.flatMap((group) => group.dimensions)
 
 export const translations = {
   fr: {
@@ -15,7 +25,7 @@ export const translations = {
     dimensionsTitle: "Dimensions",
     absence: "Absence",
     presence: "Présence",
-    custom: "Personnaliser",
+    custom: "Personnalisé",
     reset: "Réinitialiser",
     share: "Partager",
     sharePrompt: "Copiez ce lien pour le partager",
@@ -28,6 +38,11 @@ export const translations = {
     clipboardSuccess: "Lien copié dans le presse-papiers",
     clipboardError: "Échec de la copie du lien",
     pdfError: "Impossible de générer le PDF",
+    groupLabels: {
+      linkType: "Type de lien",
+      intimacyType: "Type d'intimité",
+      exclusivityType: "Type d'exclusivité"
+    },
     dimensions: {
       romantisme: "Romantisme",
       sexualite: "Sexualité",
@@ -57,6 +72,11 @@ export const translations = {
     clipboardSuccess: "Link copied to clipboard",
     clipboardError: "Failed to copy link",
     pdfError: "Unable to generate PDF",
+    groupLabels: {
+      linkType: "Type of link",
+      intimacyType: "Type of intimacy",
+      exclusivityType: "Type of exclusivity"
+    },
     dimensions: {
       romantisme: "Romanticism",
       sexualite: "Sexuality",

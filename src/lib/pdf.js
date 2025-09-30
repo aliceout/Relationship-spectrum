@@ -1,6 +1,6 @@
-import html2canvas from "html2canvas"
+﻿import html2canvas from "html2canvas"
 import { jsPDF } from "jspdf"
-import { translations, dimensionKeys, getDimensionLabel } from "./i18n"
+import { translations, dimensionGroups, getDimensionLabel } from "./i18n"
 
 export const exportSlidersPanelToPdf = async ({
   element,
@@ -40,19 +40,24 @@ export const exportSlidersPanelToPdf = async ({
 
     pdf.addImage(imageData, "PNG", margin, 34, imageWidth, imageHeight)
 
-    const startY = 40 + imageHeight
-    let currentY = startY
+    let currentY = 40 + imageHeight
 
-    pdf.setFont("helvetica", "bold")
-    pdf.text(t.dimensionsTitle, margin, currentY)
-    currentY += 6
-    pdf.setFont("helvetica", "normal")
+    dimensionGroups.forEach((group) => {
+      const groupLabel = t.groupLabels?.[group.labelKey] ?? group.labelKey
 
-    dimensionKeys.forEach((key) => {
-      const label = getDimensionLabel(lang, key)
-      const value = values[key] ?? 0
-      pdf.text(`${label}: ${value}/10`, margin, currentY)
+      pdf.setFont("helvetica", "bold")
+      pdf.text(groupLabel, margin, currentY)
       currentY += 6
+      pdf.setFont("helvetica", "normal")
+
+      group.dimensions.forEach((key) => {
+        const label = getDimensionLabel(lang, key)
+        const value = values[key] ?? 0
+        pdf.text(`${label}: ${value}/10`, margin, currentY)
+        currentY += 6
+      })
+
+      currentY += 2
     })
 
     pdf.save(`relationship-spectrum-${Date.now()}.pdf`)

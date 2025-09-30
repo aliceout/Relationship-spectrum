@@ -1,31 +1,17 @@
 {
   "presets": [
     {
-      "id": "friends_with_benefits",
-      "label_fr": "Sex friends / Amie avec bénéfices",
-      "label_en": "Friends with benefits",
+      "id": "situationship",
+      "label_fr": "Situationship",
+      "label_en": "Situationship",
       "values": {
-        "romantisme": 3,
-        "sexualite": 8,
-        "amitie": 7,
+        "romantisme": 5,
+        "sexualite": 6,
+        "amitie": 5,
         "intimite_emotionnelle": 4,
-        "intimite_physique": 8,
-        "exclusivite_physique_sexuelle": 2,
-        "exclusivite_emotionnelle": 2
-      }
-    },
-    {
-      "id": "relation_serieuse",
-      "label_fr": "Relation sérieuse",
-      "label_en": "Committed relationship",
-      "values": {
-        "romantisme": 9,
-        "sexualite": 7,
-        "amitie": 7,
-        "intimite_emotionnelle": 9,
-        "intimite_physique": 8,
-        "exclusivite_physique_sexuelle": 9,
-        "exclusivite_emotionnelle": 9
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 3,
+        "exclusivite_emotionnelle": 3
       }
     },
     {
@@ -43,6 +29,34 @@
       }
     },
     {
+      "id": "polycule",
+      "label_fr": "Polycule",
+      "label_en": "Polycule",
+      "values": {
+        "romantisme": 8,
+        "sexualite": 6,
+        "amitie": 9,
+        "intimite_emotionnelle": 8,
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 1,
+        "exclusivite_emotionnelle": 3
+      }
+    },
+    {
+      "id": "friends_with_benefits",
+      "label_fr": "Sex friends / Ami·e avec bénéfices",
+      "label_en": "Friends with benefits",
+      "values": {
+        "romantisme": 3,
+        "sexualite": 8,
+        "amitie": 7,
+        "intimite_emotionnelle": 4,
+        "intimite_physique": 8,
+        "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 2
+      }
+    },
+    {
       "id": "relation_libre",
       "label_fr": "Relation libre",
       "label_en": "Open relationship",
@@ -57,21 +71,35 @@
       }
     },
     {
-      "id": "polycules",
-      "label_fr": "Polycule",
-      "label_en": "Polycule",
+      "id": "relation_serieuse",
+      "label_fr": "Relation sérieuse",
+      "label_en": "Committed relationship",
       "values": {
-        "romantisme": 8,
-        "sexualite": 6,
-        "amitie": 9,
-        "intimite_emotionnelle": 8,
-        "intimite_physique": 6,
-        "exclusivite_physique_sexuelle": 1,
-        "exclusivite_emotionnelle": 3
+        "romantisme": 9,
+        "sexualite": 7,
+        "amitie": 7,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 8,
+        "exclusivite_physique_sexuelle": 9,
+        "exclusivite_emotionnelle": 9
       }
     },
     {
-      "id": "aromantique",
+      "id": "long_distance",
+      "label_fr": "Relation longue distance",
+      "label_en": "Long distance relationship",
+      "values": {
+        "romantisme": 8,
+        "sexualite": 4,
+        "amitie": 6,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 3,
+        "exclusivite_physique_sexuelle": 7,
+        "exclusivite_emotionnelle": 8
+      }
+    },
+    {
+      "id": "aromantic",
       "label_fr": "Configuration aromantique",
       "label_en": "Aromantic configuration",
       "values": {
@@ -85,17 +113,115 @@
       }
     },
     {
-      "id": "relation_longue_distance",
-      "label_fr": "Relation longue distance",
-      "label_en": "Long distance relationship",
+      "id": "hookup",
+      "label_fr": "Plan cul",
+      "label_en": "Hookup",
+      "values": {
+        "romantisme": 1,
+        "sexualite": 9,
+        "amitie": 1,
+        "intimite_emotionnelle": 1,
+        "intimite_physique": 9,
+        "exclusivite_physique_sexuelle": 1,
+        "exclusivite_emotionnelle": 1
+      }
+    },
+    {
+      "id": "crush_flirt",
+      "label_fr": "Crush / flirt",
+      "label_en": "Crush / flirt",
+      "values": {
+        "romantisme": 6,
+        "sexualite": 4,
+        "amitie": 3,
+        "intimite_emotionnelle": 2,
+        "intimite_physique": 3,
+        "exclusivite_physique_sexuelle": 5,
+        "exclusivite_emotionnelle": 3
+      }
+    },
+    {
+      "id": "casual_dating",
+      "label_fr": "Fréquentations légères",
+      "label_en": "Casual dating",
+      "values": {
+        "romantisme": 4,
+        "sexualite": 5,
+        "amitie": 5,
+        "intimite_emotionnelle": 3,
+        "intimite_physique": 5,
+        "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 2
+      }
+    },
+    {
+      "id": "polyfidelity",
+      "label_fr": "Polyfidélité",
+      "label_en": "Polyfidelity",
       "values": {
         "romantisme": 8,
-        "sexualite": 4,
-        "amitie": 6,
-        "intimite_emotionnelle": 9,
-        "intimite_physique": 3,
-        "exclusivite_physique_sexuelle": 7,
+        "sexualite": 6,
+        "amitie": 8,
+        "intimite_emotionnelle": 8,
+        "intimite_physique": 7,
+        "exclusivite_physique_sexuelle": 8,
         "exclusivite_emotionnelle": 8
+      }
+    },
+    {
+      "id": "squish",
+      "label_fr": "Squish",
+      "label_en": "Squish",
+      "values": {
+        "romantisme": 1,
+        "sexualite": 0,
+        "amitie": 9,
+        "intimite_emotionnelle": 7,
+        "intimite_physique": 3,
+        "exclusivite_physique_sexuelle": 5,
+        "exclusivite_emotionnelle": 4
+      }
+    },
+    {
+      "id": "platonic_life_partners",
+      "label_fr": "Partenaires de vie platoniques",
+      "label_en": "Platonic life partners",
+      "values": {
+        "romantisme": 1,
+        "sexualite": 0,
+        "amitie": 10,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 4,
+        "exclusivite_physique_sexuelle": 7,
+        "exclusivite_emotionnelle": 9
+      }
+    },
+    {
+      "id": "relationship_anarchy",
+      "label_fr": "Anarchie relationnelle",
+      "label_en": "Relationship anarchy",
+      "values": {
+        "romantisme": 5,
+        "sexualite": 5,
+        "amitie": 7,
+        "intimite_emotionnelle": 7,
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 0,
+        "exclusivite_emotionnelle": 0
+      }
+    },
+    {
+      "id": "chosen_family",
+      "label_fr": "Famille choisie",
+      "label_en": "Chosen family",
+      "values": {
+        "romantisme": 0,
+        "sexualite": 0,
+        "amitie": 9,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 5,
+        "exclusivite_physique_sexuelle": 0,
+        "exclusivite_emotionnelle": 10
       }
     }
   ],
