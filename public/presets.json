@@ -1,0 +1,88 @@
+{
+  "presets": [
+    {
+      "id": "romantic",
+      "name_fr": "Romantique",
+      "name_en": "Romantic",
+      "values": {
+        "romantisme": 10,
+        "sexualite": 8,
+        "amitie": 7,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 8,
+        "exclusivite_physique_sexuelle": 9,
+        "exclusivite_emotionnelle": 10
+      }
+    },
+    {
+      "id": "amical",
+      "name_fr": "Amical",
+      "name_en": "Friendship",
+      "values": {
+        "romantisme": 0,
+        "sexualite": 0,
+        "amitie": 10,
+        "intimite_emotionnelle": 6,
+        "intimite_physique": 2,
+        "exclusivite_physique_sexuelle": 0,
+        "exclusivite_emotionnelle": 0
+      }
+    },
+    {
+      "id": "casual",
+      "name_fr": "Décontracté",
+      "name_en": "Casual",
+      "values": {
+        "romantisme": 3,
+        "sexualite": 7,
+        "amitie": 5,
+        "intimite_emotionnelle": 3,
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 1
+      }
+    },
+    {
+      "id": "queerplatonic",
+      "name_fr": "Queerplatonique",
+      "name_en": "Queerplatonic",
+      "values": {
+        "romantisme": 2,
+        "sexualite": 0,
+        "amitie": 10,
+        "intimite_emotionnelle": 10,
+        "intimite_physique": 7,
+        "exclusivite_physique_sexuelle": 0,
+        "exclusivite_emotionnelle": 8
+      }
+    },
+    {
+      "id": "polyamorous",
+      "name_fr": "Polyamoureux",
+      "name_en": "Polyamorous",
+      "values": {
+        "romantisme": 8,
+        "sexualite": 7,
+        "amitie": 8,
+        "intimite_emotionnelle": 8,
+        "intimite_physique": 7,
+        "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 3
+      }
+    },
+    {
+      "id": "aromantic",
+      "name_fr": "Aromantique",
+      "name_en": "Aromantic",
+      "values": {
+        "romantisme": 0,
+        "sexualite": 5,
+        "amitie": 8,
+        "intimite_emotionnelle": 5,
+        "intimite_physique": 4,
+        "exclusivite_physique_sexuelle": 3,
+        "exclusivite_emotionnelle": 2
+      }
+    }
+  ]
+}
