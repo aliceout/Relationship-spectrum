@@ -226,5 +226,6 @@
     }
   ],
   "scale": { "min": 0, "max": 10, "step": 1 },
-  "labels": { "min": "Absence", "max": "Présence" }
+  "labels": { "min": "Absence", "neutral": "Neutre", "max": "Pr\u00E9sence" }
 }
+

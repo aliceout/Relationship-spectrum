@@ -13,7 +13,7 @@ import {
 import { loadPresets } from "./lib/presets"
 
 const defaultScale = { min: 0, max: 10, step: 1 }
-const defaultLabels = { min: "Absence", max: "Présence" }
+const defaultLabels = { min: "Absence", neutral: "Neutral", max: "Presence" }
 
 const createDefaultValues = (min = defaultScale.min) =>
   dimensionKeys.reduce((acc, key) => {
@@ -203,7 +203,7 @@ function App() {
         if (!active) return
         setPresets(data.presets)
         setScale(data.scale ?? defaultScale)
-        setLabels(data.labels ?? defaultLabels)
+        setLabels({ ...defaultLabels, ...(data.labels ?? {}) })
         const baseline = createDefaultValues(data.scale?.min ?? defaultScale.min)
         setValues(baseline)
         valuesRef.current = baseline
@@ -421,5 +421,3 @@ function App() {
 }
 
 export default App
-
-

@@ -1,4 +1,4 @@
-﻿import { forwardRef } from "react"
+import { forwardRef } from "react"
 import PresetBadge from "./PresetBadge"
 import SliderRow from "./SliderRow"
 import { dimensionGroups, getDimensionLabel } from "../lib/i18n"
@@ -13,6 +13,9 @@ const SlidersPanel = forwardRef(({
   presetLabel,
   isCustom
 }, ref) => {
+  const neutralPoint = scale.min + (scale.max - scale.min) / 2
+  const neutralLabel = labels?.neutral ?? (lang === "fr" ? "Neutre" : "Neutral")
+
   return (
     <section
       ref={ref}
@@ -35,6 +38,8 @@ const SlidersPanel = forwardRef(({
                 step={scale.step}
                 minLabel={labels.min}
                 maxLabel={labels.max}
+                neutralLabel={neutralLabel}
+                neutralValue={neutralPoint}
                 onChange={onSliderChange}
               />
             ))}
@@ -42,7 +47,7 @@ const SlidersPanel = forwardRef(({
         </div>
       ))}
     </section>
-  );
+  )
 })
 
 SlidersPanel.displayName = "SlidersPanel"

@@ -53,7 +53,7 @@ const Toolbar = ({
           <button
             type="button"
             onClick={onToggleLang}
-            className="inline-flex items-center gap-2 rounded-xl border border-ink/10 bg-bg-card px-3 py-2 text-sm font-semibold uppercase tracking-wide text-ink shadow-sm hover:border-brand/40 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="inline-flex items-center gap-2 rounded-xl border border-ink/10 bg-bg-card px-3 py-2 text-xs font-semibold uppercase tracking-wide text-ink shadow-sm hover:border-brand/40 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             <GlobeAltIcon className="h-4 w-4" aria-hidden="true" />
             {lang}
