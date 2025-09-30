@@ -1,377 +1,369 @@
-import { useState, useEffect } from 'react'
-import { compress, decompress } from 'lz-string'
-import { jsPDF } from 'jspdf'
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
+import SidebarButtons from "./components/SidebarButtons"
+import SlidersPanel from "./components/SlidersPanel"
+import Toolbar from "./components/Toolbar"
+import { createSharePayload, buildShareUrl, decodeState } from "./lib/encodeState"
+import { exportSlidersPanelToPdf } from "./lib/pdf"
+import {
+  dimensionKeys,
+  translations as dictionary,
+  isSupportedLanguage
+} from "./lib/i18n"
+import { loadPresets } from "./lib/presets"
 
-const translations = {
-  fr: {
-    title: 'Spectre relationnel',
-    dimensions: {
-      romantisme: 'Romantisme',
-      sexualite: 'Sexualité',
-      amitie: 'Amitié',
-      intimite_emotionnelle: 'Intimité émotionnelle',
-      intimite_physique: 'Intimité physique',
-      exclusivite_physique_sexuelle: 'Exclusivité physique/sexuelle',
-      exclusivite_emotionnelle: 'Exclusivité émotionnelle'
-    },
-    absence: 'Absence',
-    presence: 'Présence',
-    custom: 'Personnalisé',
-    reset: 'Réinitialiser',
-    share: 'Partager',
-    exportPDF: 'Exporter PDF',
-    menu: 'Menu',
-    close: 'Fermer'
-  },
-  en: {
-    title: 'Relationship Spectrum',
-    dimensions: {
-      romantisme: 'Romanticism',
-      sexualite: 'Sexuality',
-      amitie: 'Friendship',
-      intimite_emotionnelle: 'Emotional intimacy',
-      intimite_physique: 'Physical intimacy',
-      exclusivite_physique_sexuelle: 'Physical/sexual exclusivity',
-      exclusivite_emotionnelle: 'Emotional exclusivity'
-    },
-    absence: 'Absence',
-    presence: 'Presence',
-    custom: 'Custom',
-    reset: 'Reset',
-    share: 'Share',
-    exportPDF: 'Export PDF',
-    menu: 'Menu',
-    close: 'Close'
-  }
+const defaultScale = { min: 0, max: 10, step: 1 }
+const defaultLabels = { min: "Absence", max: "Pr�sence" }
+
+const createDefaultValues = (min = defaultScale.min) =>
+  dimensionKeys.reduce((acc, key) => {
+    acc[key] = min
+    return acc
+  }, {})
+
+const clampToScale = (value, scale) => {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) return scale.min
+  return Math.min(scale.max, Math.max(scale.min, numeric))
 }
 
-const dimensionKeys = [
-  'romantisme',
-  'sexualite',
-  'amitie',
-  'intimite_emotionnelle',
-  'intimite_physique',
-  'exclusivite_physique_sexuelle',
-  'exclusivite_emotionnelle'
-]
-
 function App() {
-  const [lang, setLang] = useState('fr')
+  const [lang, setLang] = useState("fr")
   const [presets, setPresets] = useState([])
-  const [selectedPreset, setSelectedPreset] = useState(null)
-  const [values, setValues] = useState({
-    romantisme: 0,
-    sexualite: 0,
-    amitie: 0,
-    intimite_emotionnelle: 0,
-    intimite_physique: 0,
-    exclusivite_physique_sexuelle: 0,
-    exclusivite_emotionnelle: 0
-  })
+  const [scale, setScale] = useState(defaultScale)
+  const [labels, setLabels] = useState(defaultLabels)
+  const [values, setValues] = useState(createDefaultValues())
+  const [selectedPresetId, setSelectedPresetId] = useState(null)
   const [isCustom, setIsCustom] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [status, setStatus] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const t = translations[lang]
+  const slidersRef = useRef(null)
+  const animationRef = useRef(null)
+  const valuesRef = useRef(values)
 
-  // Load presets
-  useEffect(() => {
-    fetch('/presets.json')
-      .then(res => res.json())
-      .then(data => setPresets(data.presets))
-      .catch(err => console.error('Error loading presets:', err))
-  }, [])
+  const t = dictionary[lang] ?? dictionary.fr
 
-  // Load state from URL on mount
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const state = params.get('state')
-    if (state) {
-      try {
-        const decoded = decompress(state)
-        const data = JSON.parse(decoded)
-        if (data.values) {
-          setValues(data.values)
-          setIsCustom(true)
-        }
-        if (data.lang) {
-          setLang(data.lang)
-        }
-      } catch (e) {
-        console.error('Error decoding state:', e)
+  const hydrateFromUrl = useCallback((presetList, scaleData) => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const encoded = params.get("s")
+      if (!encoded) return
+
+      const decoded = decodeState(encoded)
+      if (!decoded) return
+
+      if (decoded.lang && isSupportedLanguage(decoded.lang)) {
+        setLang(decoded.lang)
       }
-    }
-  }, [])
 
-  const handlePresetClick = (preset) => {
-    if (isAnimating) return
-    
-    setIsAnimating(true)
-    setSelectedPreset(preset.id)
-    setIsCustom(false)
-    setMobileMenuOpen(false)
-    
-    // Animate sliders
-    const startValues = { ...values }
-    const endValues = preset.values
-    const duration = 300
-    const startTime = Date.now()
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      
-      const newValues = {}
-      dimensionKeys.forEach(key => {
-        const start = startValues[key] || 0
-        const end = endValues[key] || 0
-        newValues[key] = Math.round(start + (end - start) * progress)
-      })
-      
-      setValues(newValues)
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate)
+      if (decoded.values && typeof decoded.values === "object") {
+        const baseline = createDefaultValues(scaleData.min ?? defaultScale.min)
+        dimensionKeys.forEach((key) => {
+          baseline[key] = clampToScale(decoded.values[key], {
+            min: scaleData.min ?? defaultScale.min,
+            max: scaleData.max ?? defaultScale.max
+          })
+        })
+        setValues(baseline)
+        valuesRef.current = baseline
+      }
+
+      if (decoded.presetId && presetList.some((preset) => preset.id === decoded.presetId)) {
+        setSelectedPresetId(decoded.presetId)
+        setIsCustom(false)
       } else {
-        setIsAnimating(false)
+        setSelectedPresetId(null)
+        setIsCustom(true)
+      }
+    } catch (error) {
+      console.error("Failed to hydrate state from URL", error)
+    }
+  }, [])
+
+  const activePreset = useMemo(
+    () => presets.find((preset) => preset.id === selectedPresetId) ?? null,
+    [presets, selectedPresetId]
+  )
+
+  const presetLabel = useMemo(() => {
+    if (isCustom) {
+      return t.custom
+    }
+
+    if (!activePreset) {
+      return null
+    }
+
+    return lang === "fr" ? activePreset.label_fr : activePreset.label_en
+  }, [activePreset, isCustom, lang, t.custom])
+
+  const animateToValues = useCallback(
+    (targetValues) => {
+      if (!targetValues) return
+
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+
+      const startValues = { ...valuesRef.current }
+      const duration = 350
+      const startTime = performance.now()
+
+      const step = (currentTime) => {
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = 0.5 - Math.cos(progress * Math.PI) / 2
+
+        const nextValues = {}
+        dimensionKeys.forEach((key) => {
+          const start = startValues[key] ?? scale.min
+          const end = clampToScale(targetValues[key], scale)
+          nextValues[key] = Math.round(start + (end - start) * eased)
+        })
+
+        setValues(nextValues)
+
+        if (progress < 1) {
+          animationRef.current = requestAnimationFrame(step)
+        } else {
+          setIsAnimating(false)
+          animationRef.current = null
+        }
+      }
+
+      setIsAnimating(true)
+      animationRef.current = requestAnimationFrame(step)
+    },
+    [scale]
+  )
+
+  useEffect(() => {
+    valuesRef.current = values
+  }, [values])
+
+  useEffect(() => {
+    let active = true
+
+    loadPresets()
+      .then((data) => {
+        if (!active) return
+        setPresets(data.presets)
+        setScale(data.scale ?? defaultScale)
+        setLabels(data.labels ?? defaultLabels)
+        const baseline = createDefaultValues(data.scale?.min ?? defaultScale.min)
+        setValues(baseline)
+        valuesRef.current = baseline
+        hydrateFromUrl(data.presets, data.scale ?? defaultScale)
+      })
+      .catch((error) => {
+        console.error(error)
+        if (active) {
+          setStatus({ type: "error", message: dictionary.fr.loadError })
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [hydrateFromUrl])
+
+  useEffect(() => {
+    if (!status) return undefined
+    const timeout = window.setTimeout(() => setStatus(null), 3200)
+    return () => window.clearTimeout(timeout)
+  }, [status])
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
       }
     }
-    
-    animate()
+  }, [])
+
+  const handlePresetSelect = (preset) => {
+    if (!preset) return
+    setSelectedPresetId(preset.id)
+    setIsCustom(false)
+    setIsMenuOpen(false)
+    animateToValues(preset.values)
+
+    const url = new URL(window.location.href)
+    url.searchParams.delete("s")
+    window.history.replaceState({}, "", url.toString())
   }
 
-  const handleSliderChange = (dimension, value) => {
-    const newValues = { ...values, [dimension]: parseInt(value) }
-    setValues(newValues)
-    
-    // Check if custom
-    if (selectedPreset) {
-      const preset = presets.find(p => p.id === selectedPreset)
-      if (preset) {
-        const isMatch = dimensionKeys.every(key => 
-          newValues[key] === (preset.values[key] || 0)
-        )
-        if (!isMatch) {
-          setIsCustom(true)
-          setSelectedPreset(null)
-        }
-      }
-    } else {
-      setIsCustom(true)
+  const handleSliderChange = (key, value) => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
     }
+
+    const nextValue = clampToScale(value, scale)
+    setValues((prev) => ({
+      ...prev,
+      [key]: nextValue
+    }))
+    setSelectedPresetId(null)
+    setIsCustom(true)
+    setIsAnimating(false)
   }
 
   const handleReset = () => {
-    const resetValues = {}
-    dimensionKeys.forEach(key => {
-      resetValues[key] = 0
-    })
-    setValues(resetValues)
-    setSelectedPreset(null)
-    setIsCustom(false)
-  }
-
-  const handleShare = () => {
-    const state = {
-      values,
-      lang
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
     }
-    const compressed = compress(JSON.stringify(state))
-    const url = `${window.location.origin}${window.location.pathname}?state=${compressed}`
-    
-    navigator.clipboard.writeText(url).then(() => {
-      alert(lang === 'fr' ? 'Lien copié!' : 'Link copied!')
-    }).catch(() => {
-      alert(lang === 'fr' ? 'Erreur lors de la copie' : 'Error copying')
-    })
+    const baseline = createDefaultValues(scale.min)
+    setValues(baseline)
+    setSelectedPresetId(null)
+    setIsCustom(false)
+    setIsAnimating(false)
+    setStatus(null)
+
+    const url = new URL(window.location.href)
+    url.searchParams.delete("s")
+    window.history.replaceState({}, "", url.toString())
   }
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF()
-    
-    doc.setFontSize(20)
-    doc.text(t.title, 20, 20)
-    
-    let y = 40
-    dimensionKeys.forEach(key => {
-      doc.setFontSize(12)
-      doc.text(`${t.dimensions[key]}: ${values[key]}/10`, 20, y)
-      y += 10
-    })
-    
-    doc.save('relationship-spectrum.pdf')
+  const handleShare = async () => {
+    try {
+      const payload = createSharePayload({
+        values,
+        lang,
+        presetId: isCustom ? null : selectedPresetId
+      })
+      const shareUrl = buildShareUrl(payload)
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl)
+        setStatus({ type: "success", message: t.clipboardSuccess })
+      } else {
+        window.prompt(t.sharePrompt, shareUrl)
+        setStatus({ type: "success", message: t.clipboardSuccess })
+      }
+
+      window.history.replaceState({}, "", shareUrl)
+    } catch (error) {
+      console.error("Share failed", error)
+      setStatus({ type: "error", message: t.clipboardError })
+    }
+  }
+
+  const handleExportPdf = async () => {
+    if (!slidersRef.current) return
+    try {
+      await exportSlidersPanelToPdf({
+        element: slidersRef.current,
+        lang,
+        values,
+        presetLabel
+      })
+    } catch (error) {
+      console.error("Export PDF failed", error)
+      setStatus({ type: "error", message: t.pdfError })
+    }
+  }
+
+  const toggleLanguage = () => {
+    setLang((current) => (current === "fr" ? "en" : "fr"))
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">{t.title}</h1>
-            <div className="flex gap-2 items-center">
-              {/* Language toggle */}
-              <button
-                onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
-                className="px-3 py-1 text-sm font-medium bg-gray-200 hover:bg-gray-300 rounded transition"
-              >
-                {lang === 'fr' ? 'EN' : 'FR'}
-              </button>
-              
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden px-3 py-1 text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 rounded transition"
-              >
-                {mobileMenuOpen ? t.close : t.menu}
-              </button>
-              
-              {/* Action buttons */}
-              <button
-                onClick={handleShare}
-                className="hidden sm:block px-3 py-1 text-sm font-medium bg-green-500 text-white hover:bg-green-600 rounded transition"
-              >
-                {t.share}
-              </button>
-              <button
-                onClick={handleExportPDF}
-                className="hidden sm:block px-3 py-1 text-sm font-medium bg-purple-500 text-white hover:bg-purple-600 rounded transition"
-              >
-                {t.exportPDF}
-              </button>
+    <div className="min-h-screen bg-bg text-ink">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-4 py-8 lg:flex-row">
+        <aside className="hidden w-72 shrink-0 lg:block">
+          <div className="sticky top-8 space-y-4">
+            <div className="rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-semibold text-ink">{t.relations}</h2>
+              <SidebarButtons
+                presets={presets}
+                selectedId={selectedPresetId}
+                lang={lang}
+                translations={t}
+                onSelect={handlePresetSelect}
+                isAnimating={isAnimating}
+              />
             </div>
           </div>
-        </div>
-      </header>
+        </aside>
 
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left column - Presets (Desktop) */}
-          <div className="hidden lg:block lg:w-1/3">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold mb-4">
-                {lang === 'fr' ? 'Relations' : 'Relationships'}
-              </h2>
-              <div className="space-y-2">
-                {presets.map(preset => (
-                  <button
-                    key={preset.id}
-                    onClick={() => handlePresetClick(preset)}
-                    className={`w-full text-left px-4 py-2 rounded transition ${
-                      selectedPreset === preset.id
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                    disabled={isAnimating}
-                  >
-                    {lang === 'fr' ? preset.name_fr : preset.name_en}
-                  </button>
-                ))}
+        <main className="flex-1 space-y-6 pb-10">
+          <section className="space-y-4 rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
+              <div>
+                <h1 className="text-2xl font-semibold text-ink">{t.appTitle}</h1>
               </div>
             </div>
-          </div>
+            <Toolbar
+              lang={lang}
+              translations={t}
+              onReset={handleReset}
+              onShare={handleShare}
+              onExport={handleExportPdf}
+              onToggleLang={toggleLanguage}
+              onToggleMenu={setIsMenuOpen}
+              isMenuOpen={isMenuOpen}
+            />
+          </section>
 
-          {/* Mobile drawer */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
-              <div className="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
-                <h2 className="text-lg font-semibold mb-4">
-                  {lang === 'fr' ? 'Relations' : 'Relationships'}
-                </h2>
-                <div className="space-y-2">
-                  {presets.map(preset => (
-                    <button
-                      key={preset.id}
-                      onClick={() => handlePresetClick(preset)}
-                      className={`w-full text-left px-4 py-2 rounded transition ${
-                        selectedPreset === preset.id
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 hover:bg-gray-200'
-                      }`}
-                      disabled={isAnimating}
-                    >
-                      {lang === 'fr' ? preset.name_fr : preset.name_en}
-                    </button>
-                  ))}
-                </div>
-                <div className="mt-6 space-y-2">
-                  <button
-                    onClick={() => {
-                      handleShare()
-                      setMobileMenuOpen(false)
-                    }}
-                    className="w-full px-3 py-2 text-sm font-medium bg-green-500 text-white hover:bg-green-600 rounded transition"
-                  >
-                    {t.share}
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleExportPDF()
-                      setMobileMenuOpen(false)
-                    }}
-                    className="w-full px-3 py-2 text-sm font-medium bg-purple-500 text-white hover:bg-purple-600 rounded transition"
-                  >
-                    {t.exportPDF}
-                  </button>
-                </div>
-              </div>
+          <SlidersPanel
+            ref={slidersRef}
+            values={values}
+            scale={scale}
+            labels={labels}
+            translations={t}
+            lang={lang}
+            onSliderChange={handleSliderChange}
+            presetLabel={presetLabel}
+            isCustom={isCustom}
+          />
+
+          {status && (
+            <div
+              className={`rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm ${
+                status.type === "error"
+                  ? "border-warn/40 bg-warn/10 text-warn"
+                  : "border-accent/40 bg-accent/10 text-accent"
+              }`}
+            >
+              {status.message}
             </div>
           )}
+        </main>
+      </div>
 
-          {/* Right column - Sliders */}
-          <div className="flex-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">
-                  {lang === 'fr' ? 'Dimensions' : 'Dimensions'}
-                </h2>
-                <div className="flex gap-2 items-center">
-                  {isCustom && (
-                    <span className="px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
-                      {t.custom}
-                    </span>
-                  )}
-                  <button
-                    onClick={handleReset}
-                    className="px-3 py-1 text-sm font-medium bg-red-500 text-white hover:bg-red-600 rounded transition"
-                  >
-                    {t.reset}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                {dimensionKeys.map(key => (
-                  <div key={key}>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        {t.dimensions[key]}
-                      </label>
-                      <span className="text-sm font-semibold text-gray-900 min-w-[2rem] text-right">
-                        {values[key]}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500 w-16">{t.absence}</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="10"
-                        value={values[key]}
-                        onChange={(e) => handleSliderChange(key, e.target.value)}
-                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                      />
-                      <span className="text-xs text-gray-500 w-16 text-right">{t.presence}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-ink/40" onClick={() => setIsMenuOpen(false)} />
+          <aside className="relative ml-auto flex h-full w-72 flex-col gap-4 bg-bg-card p-6 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-ink">{t.relations}</h2>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-ink/10 text-ink hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                aria-label={t.close}
+              >
+                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
             </div>
-          </div>
+            <SidebarButtons
+              presets={presets}
+              selectedId={selectedPresetId}
+              lang={lang}
+              translations={t}
+              onSelect={handlePresetSelect}
+              isAnimating={isAnimating}
+            />
+          </aside>
         </div>
-      </main>
+      )}
     </div>
   )
 }
 
 export default App
+

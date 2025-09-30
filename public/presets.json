@@ -1,88 +1,104 @@
 {
   "presets": [
     {
-      "id": "romantic",
-      "name_fr": "Romantique",
-      "name_en": "Romantic",
+      "id": "friends_with_benefits",
+      "label_fr": "Sex friends / Amie avec bénéfices",
+      "label_en": "Friends with benefits",
       "values": {
-        "romantisme": 10,
+        "romantisme": 3,
         "sexualite": 8,
+        "amitie": 7,
+        "intimite_emotionnelle": 4,
+        "intimite_physique": 8,
+        "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 2
+      }
+    },
+    {
+      "id": "relation_serieuse",
+      "label_fr": "Relation sérieuse",
+      "label_en": "Committed relationship",
+      "values": {
+        "romantisme": 9,
+        "sexualite": 7,
         "amitie": 7,
         "intimite_emotionnelle": 9,
         "intimite_physique": 8,
         "exclusivite_physique_sexuelle": 9,
-        "exclusivite_emotionnelle": 10
-      }
-    },
-    {
-      "id": "amical",
-      "name_fr": "Amical",
-      "name_en": "Friendship",
-      "values": {
-        "romantisme": 0,
-        "sexualite": 0,
-        "amitie": 10,
-        "intimite_emotionnelle": 6,
-        "intimite_physique": 2,
-        "exclusivite_physique_sexuelle": 0,
-        "exclusivite_emotionnelle": 0
-      }
-    },
-    {
-      "id": "casual",
-      "name_fr": "Décontracté",
-      "name_en": "Casual",
-      "values": {
-        "romantisme": 3,
-        "sexualite": 7,
-        "amitie": 5,
-        "intimite_emotionnelle": 3,
-        "intimite_physique": 6,
-        "exclusivite_physique_sexuelle": 2,
-        "exclusivite_emotionnelle": 1
+        "exclusivite_emotionnelle": 9
       }
     },
     {
       "id": "queerplatonic",
-      "name_fr": "Queerplatonique",
-      "name_en": "Queerplatonic",
+      "label_fr": "Partenariat queerplatonique",
+      "label_en": "Queerplatonic partnership",
       "values": {
         "romantisme": 2,
-        "sexualite": 0,
-        "amitie": 10,
+        "sexualite": 1,
+        "amitie": 9,
         "intimite_emotionnelle": 10,
-        "intimite_physique": 7,
-        "exclusivite_physique_sexuelle": 0,
-        "exclusivite_emotionnelle": 8
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 1,
+        "exclusivite_emotionnelle": 7
       }
     },
     {
-      "id": "polyamorous",
-      "name_fr": "Polyamoureux",
-      "name_en": "Polyamorous",
+      "id": "relation_libre",
+      "label_fr": "Relation libre",
+      "label_en": "Open relationship",
       "values": {
-        "romantisme": 8,
+        "romantisme": 7,
         "sexualite": 7,
-        "amitie": 8,
-        "intimite_emotionnelle": 8,
+        "amitie": 6,
+        "intimite_emotionnelle": 6,
         "intimite_physique": 7,
         "exclusivite_physique_sexuelle": 2,
+        "exclusivite_emotionnelle": 4
+      }
+    },
+    {
+      "id": "polycules",
+      "label_fr": "Polycule",
+      "label_en": "Polycule",
+      "values": {
+        "romantisme": 8,
+        "sexualite": 6,
+        "amitie": 9,
+        "intimite_emotionnelle": 8,
+        "intimite_physique": 6,
+        "exclusivite_physique_sexuelle": 1,
         "exclusivite_emotionnelle": 3
       }
     },
     {
-      "id": "aromantic",
-      "name_fr": "Aromantique",
-      "name_en": "Aromantic",
+      "id": "aromantique",
+      "label_fr": "Configuration aromantique",
+      "label_en": "Aromantic configuration",
       "values": {
-        "romantisme": 0,
-        "sexualite": 5,
+        "romantisme": 1,
+        "sexualite": 4,
         "amitie": 8,
         "intimite_emotionnelle": 5,
         "intimite_physique": 4,
         "exclusivite_physique_sexuelle": 3,
         "exclusivite_emotionnelle": 2
       }
+    },
+    {
+      "id": "relation_longue_distance",
+      "label_fr": "Relation longue distance",
+      "label_en": "Long distance relationship",
+      "values": {
+        "romantisme": 8,
+        "sexualite": 4,
+        "amitie": 6,
+        "intimite_emotionnelle": 9,
+        "intimite_physique": 3,
+        "exclusivite_physique_sexuelle": 7,
+        "exclusivite_emotionnelle": 8
+      }
     }
-  ]
+  ],
+  "scale": { "min": 0, "max": 10, "step": 1 },
+  "labels": { "min": "Absence", "max": "Présence" }
 }
