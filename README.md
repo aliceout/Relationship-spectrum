@@ -1,4 +1,4 @@
-# Relationship Spectrum
+# 🧑‍🤝‍🧑Relationship Spectrum
 
 A visual tool to explore and visualize different relationship dimensions on a spectrum.
 
