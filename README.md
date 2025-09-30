@@ -1,8 +1,8 @@
-# Relationship Spectrum
+# 🧑‍🤝‍🧑Relationship Spectrum
 
 A visual tool to explore and visualize different relationship dimensions on a spectrum.
 
-![Relationship Spectrum Preview](https://github.com/user-attachments/assets/4e45083f-a795-46a1-b83d-c40969d3523c)
+![Relationship Spectrum Preview](https://github.com/user-attachments/assets/42217464-dbf8-459e-a9ff-288d503f0afa)
 
 ## Features
 
