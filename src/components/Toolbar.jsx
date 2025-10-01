@@ -32,8 +32,8 @@ const Toolbar = ({
   onThemeChange
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div className="flex flex-wrap items-center gap-7">
+    <div className="flex flex-col justify-start gap-6">
+      <div className="flex flex-row items-center justify-end gap-7">
         <button
           type="button"
           onClick={() => onToggleMenu(!isMenuOpen)}
