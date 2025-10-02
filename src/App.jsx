@@ -351,7 +351,7 @@ function App() {
         </aside>
 
         <main className="flex-1 space-y-6 pb-10">
-          <section className="flex flex-row  items-start justify-between  rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm">
+          <section className="flex flex-col md:flex-row items-start justify-between  rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm gap-3 md:gap-0">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
               <h1 className="text-2xl font-semibold text-ink">{t.appTitle}</h1>
             </div>

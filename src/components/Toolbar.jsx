@@ -32,20 +32,8 @@ const Toolbar = ({
   onThemeChange
 }) => {
   return (
-    <div className="flex flex-col justify-start gap-6">
-      <div className="flex flex-row items-center justify-end gap-7">
-        <button
-          type="button"
-          onClick={() => onToggleMenu(!isMenuOpen)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-ink/10 bg-bg-card text-ink shadow-sm hover:border-brand/40 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:hidden"
-          aria-label={isMenuOpen ? translations.close : translations.menu}
-        >
-          {isMenuOpen ? (
-            <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-          ) : (
-            <Bars3Icon className="h-5 w-5" aria-hidden="true" />
-          )}
-        </button>
+    <div className="flex flex-col justify-start gap-3 md:gap-6 items-center">
+      <div className="flex flex-row items-center justify-between md:justify-end md:gap-7 gap-4 w-full">
         <div className="flex gap-2 items-center">
           <span className="hidden text-sm font-medium text-ink lg:inline">
             {translations.language}
@@ -60,7 +48,7 @@ const Toolbar = ({
           </button>
         </div>
         <div className="inline-flex items-center gap-2">
-          <span className="text-sm font-medium text-ink">
+          <span className="text-sm font-medium text-ink hidden">
             {translations.theme}
           </span>
           <ThemeToggle
@@ -70,6 +58,18 @@ const Toolbar = ({
             translations={translations}
           />
         </div>
+        <button
+          type="button"
+          onClick={() => onToggleMenu(!isMenuOpen)}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-ink/10 bg-bg-card text-ink shadow-sm hover:border-brand/40 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:hidden"
+          aria-label={isMenuOpen ? translations.close : translations.menu}
+        >
+          {isMenuOpen ? (
+            <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Bars3Icon className="h-5 w-5" aria-hidden="true" />
+          )}
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
