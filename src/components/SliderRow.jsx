@@ -25,9 +25,9 @@ const SliderRow = ({
   const neutralId = neutralLabel ? `${name}-neutral` : undefined
 
   return (
-    <div className="space-y-2">
+    <div className="md:space-y-2">
       <div className="flex items-center justify-between">
-        <label htmlFor={name} className="text-sm font-medium text-ink">
+        <label htmlFor={name} className="text-sm font-medium text-ink md:pb-2">
           {label}
         </label>
         <span

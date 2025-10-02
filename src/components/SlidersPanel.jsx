@@ -19,14 +19,14 @@ const SlidersPanel = forwardRef(({
   return (
     <section
       ref={ref}
-      className="flex flex-col rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm space-y-8 gap-y-6"
+      className="flex flex-col rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm space-y-4 md:space-y-8"
     >
       {dimensionGroups.map((group) => (
-        <div key={group.id} className="space-y-4 flex flex-col gap-y-2">
+        <div key={group.id} className="md:space-y-4 flex flex-col space-y-3">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-ink-secondary">
             {translations.groupLabels?.[group.labelKey] ?? group.labelKey}
           </h3>
-          <div className="space-y-6">
+          <div className="space-y-1 md:space-y-4">
             {group.dimensions.map((key) => (
               <SliderRow
                 key={key}
@@ -47,7 +47,7 @@ const SlidersPanel = forwardRef(({
         </div>
       ))}
     </section>
-  )
+  );
 })
 
 SlidersPanel.displayName = "SlidersPanel"
