@@ -4,9 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: "#6C5CE7",
-        accent: "#00B894",
-        warn: "#FF7675",
+        brand: "#F36BA4",
+        accent: "#7B6CF6",
+        warn: "#FF8B64",
+        glow: "#6FD0C1",
+        blush: "#FDE5EC",
         ink: {
           DEFAULT: "rgb(var(--color-ink) / <alpha-value>)",
           secondary: "rgb(var(--color-ink-secondary) / <alpha-value>)"
@@ -17,7 +19,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"]
+        sans: ["Poppins", "Inter", "sans-serif"],
+        display: ["Playfair Display", "serif"]
       }
     }
   },

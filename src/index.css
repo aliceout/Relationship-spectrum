@@ -1,23 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-bg: 249 250 251;
-  --color-bg-card: 255 255 255;
-  --color-ink: 31 41 55;
-  --color-ink-secondary: 75 85 99;
+  --color-bg: 255 245 248;
+  --color-bg-card: 255 252 250;
+  --color-ink: 73 39 57;
+  --color-ink-secondary: 137 96 122;
   color-scheme: light;
 }
 
 .dark {
-  --color-bg: 17 24 39;
-  --color-bg-card: 30 41 59;
-  --color-ink: 226 232 240;
-  --color-ink-secondary: 148 163 184;
+  --color-bg: 20 14 31;
+  --color-bg-card: 36 21 52;
+  --color-ink: 244 230 250;
+  --color-ink-secondary: 205 173 226;
   color-scheme: dark;
 }
 
 body {
-  @apply bg-bg font-sans text-ink;
+  @apply font-sans text-ink;
+  background-color: rgb(var(--color-bg) / 1);
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 201, 220, 0.6), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(189, 184, 255, 0.45), transparent 55%),
+    linear-gradient(180deg, rgba(255, 245, 248, 1) 0%, rgba(240, 247, 255, 1) 100%);
+  background-attachment: fixed;
+  transition: background-color 300ms ease, color 300ms ease, background-image 300ms ease;
+  min-height: 100vh;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(243, 107, 164, 0.2), transparent 50%),
+    radial-gradient(circle at 85% 10%, rgba(123, 108, 246, 0.25), transparent 55%),
+    linear-gradient(180deg, rgba(22, 12, 33, 1) 0%, rgba(10, 16, 31, 1) 100%);
 }

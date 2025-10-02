@@ -34,15 +34,15 @@ const ThemeToggle = ({ value, resolvedTheme, onChange, translations }) => {
 
   const indicatorStyle = {
     transform: `translateX(${currentIndex * 100}%)`,
-    width: "calc((100% - 0.5rem) / 3)"
+    width: "calc((100% - 0.75rem) / 3)"
   }
 
   return (
-    <div className="relative inline-flex overflow-hidden rounded-xl border border-ink/10 bg-bg-card p-1 shadow-sm">
+    <div className="relative inline-flex overflow-hidden rounded-full border border-white/60 bg-white/[0.7] p-1.5 shadow-[0_15px_45px_-30px_rgba(243,107,164,0.5)] backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.08]">
       <span className="sr-only">{translations.theme ?? "Theme"}</span>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-1 left-1 rounded-lg bg-brand/10 transition-transform duration-200 ease-out"
+        className="pointer-events-none absolute inset-y-1.5 left-1.5 rounded-full bg-gradient-to-r from-brand/20 via-brand/10 to-accent/20 transition-transform duration-200 ease-out"
         style={indicatorStyle}
       />
       {options.map((option) => {
@@ -57,7 +57,7 @@ const ThemeToggle = ({ value, resolvedTheme, onChange, translations }) => {
                 onChange(option.value)
               }
             }}
-            className={`relative z-10 inline-flex flex-1 items-center justify-center rounded-lg px-2 py-1 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+            className={`relative z-10 inline-flex flex-1 items-center justify-center rounded-full px-3 py-1.5 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
               isActive ? "text-brand" : "text-ink-secondary hover:text-ink"
             }`}
             aria-pressed={isActive}
@@ -73,3 +73,4 @@ const ThemeToggle = ({ value, resolvedTheme, onChange, translations }) => {
 }
 
 export default ThemeToggle
+

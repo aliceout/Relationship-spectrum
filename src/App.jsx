@@ -336,9 +336,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-ink">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-4 py-8 lg:flex-row">
-        <aside className="hidden shrink-0 lg:block rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm sticky top-8 space-y-4">
+    <div className="min-h-screen text-ink transition-colors duration-300 ease-out">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-4 py-10 lg:flex-row lg:py-16">
+        <aside className="sticky top-12 hidden shrink-0 space-y-6 rounded-[32px] border border-white/50 bg-white/[0.65] p-8 shadow-[0_30px_90px_-50px_rgba(243,107,164,0.6)] backdrop-blur-2xl transition lg:block dark:border-white/10 dark:bg-white/[0.07] dark:shadow-[0_30px_90px_-55px_rgba(123,108,246,0.55)]">
           <h2 className="mb-4 text-lg font-semibold text-ink">{t.relations}</h2>
           <SidebarButtons
             presets={presets}
@@ -350,10 +350,10 @@ function App() {
           />
         </aside>
 
-        <main className="flex-1 space-y-6 pb-10">
-          <section className="flex flex-col md:flex-row items-start justify-between  rounded-2xl border border-ink/5 bg-bg-card p-6 shadow-sm gap-3 md:gap-0">
+        <main className="flex-1 space-y-8 pb-14">
+          <section className="flex flex-col items-start justify-between gap-6 rounded-[32px] border border-white/50 bg-white/[0.7] p-6 shadow-[0_25px_80px_-50px_rgba(243,107,164,0.6)] backdrop-blur-2xl transition md:flex-row dark:border-white/10 dark:bg-white/[0.08] dark:shadow-[0_25px_80px_-55px_rgba(123,108,246,0.55)]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
-              <h1 className="text-2xl font-semibold text-ink">{t.appTitle}</h1>
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-ink md:text-[2.1rem]">{t.appTitle}</h1>
             </div>
             <Toolbar
               lang={lang}
@@ -384,10 +384,10 @@ function App() {
 
           {status && (
             <div
-              className={`rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm ${
+              className={`rounded-2xl border px-4 py-3 text-sm font-semibold shadow-[0_18px_45px_-38px_rgba(243,107,164,0.65)] backdrop-blur-md ${
                 status.type === "error"
-                  ? "border-warn/40 bg-warn/10 text-warn"
-                  : "border-accent/40 bg-accent/10 text-accent"
+                  ? "border-warn/40 bg-warn/15 text-warn"
+                  : "border-glow/40 bg-glow/15 text-ink"
               }`}
             >
               {status.message}
@@ -403,16 +403,16 @@ function App() {
           aria-modal="true"
         >
           <div
-            className="absolute inset-0 bg-ink/40"
+            className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
           />
-          <aside className="relative ml-auto flex h-full w-72 flex-col gap-4 bg-bg-card p-6 shadow-xl">
+          <aside className="relative ml-auto flex h-full w-72 flex-col gap-4 rounded-l-[32px] border border-white/15 bg-white/[0.8] p-6 shadow-[0_30px_80px_-60px_rgba(243,107,164,0.55)] backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.08] dark:shadow-[0_30px_90px_-60px_rgba(123,108,246,0.6)]">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-ink">{t.relations}</h2>
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-ink/10 text-ink hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/50 bg-white/[0.8] text-ink transition hover:bg-brand/10 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand dark:border-white/10 dark:bg-white/[0.1] dark:hover:bg-white/[0.15]"
                 aria-label={t.close}
               >
                 <XMarkIcon className="h-5 w-5" aria-hidden="true" />
@@ -434,3 +434,8 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
